@@ -19,9 +19,15 @@ st.markdown("""
         box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
     }
     .profile-card {
-        background-color: #f0f2f6; padding: 20px;
-        border-radius: 10px; margin-bottom: 20px;
+        background-color: #f0f2f6; 
+        padding: 20px;
+        border-radius: 10px; 
+        margin-bottom: 20px;
         border-left: 5px solid #4CAF50;
+        color: #1f2937; /* <--- FIX: Forces dark text regardless of dark/light mode */
+    }
+    .profile-card h3 {
+        color: #2c3e50; /* <--- FIX: Ensures header is also dark */
     }
     .drilldown-header {
         color: #2c3e50; font-size: 1.1em; margin-top: 15px; margin-bottom: 10px; font-weight: bold;
@@ -138,7 +144,6 @@ def process_data(sales_file, user_file, att_file, cov_file, cc_file, ful_file):
     master['emp_s'] = emp_s
 
     return master, df_sales, df_attendance, df_coverage, df_fulfill, emp_s, emp_a, emp_cov, emp_f, sales_val_col, qty_case_col, col_visited, col_billed, ticket_s, ticket_f, price_col, signoff_col, cat_col, brand_col, sku_col, store_col, reg_col, state_col, city_col, emp_name_col, desig_col
-
 
 # ==========================================
 # 3. APP LAYOUT & SIDEBAR
@@ -361,14 +366,13 @@ if all([f_sales, f_user, f_att, f_cov, f_cc, f_ful]):
                         selected_timeline = st.selectbox("Select Timeline:", df_trend['Timeline'].tolist())
 
                     # ---------------------------------------------------------
-                    # LEVEL 1 CHART: Grouped Bar Chart (Reverted back as requested)
+                    # LEVEL 1 CHART: Grouped Bar Chart
                     # ---------------------------------------------------------
                     chart_df_L1 = df_trend[df_trend["Timeline"] != "Total / All Months"]
                     if not chart_df_L1.empty and len(chart_df_L1) > 0:
                         fig1 = px.bar(chart_df_L1, x="Timeline", y=["Performance (Sales ₹)", "Order Fullfilment (₹)"], 
                                       barmode='group', title="📊 Monthly Trend: Sales vs Fulfillment",
                                       color_discrete_map={"Performance (Sales ₹)": "#3498db", "Order Fullfilment (₹)": "#2ecc71"})
-                        # Making the chart smaller in height
                         fig1.update_layout(height=320, margin=dict(t=40, b=0, l=0, r=0), legend_title_text='')
                         st.plotly_chart(fig1, use_container_width=True)
 
